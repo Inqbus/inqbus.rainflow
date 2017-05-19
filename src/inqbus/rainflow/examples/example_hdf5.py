@@ -1,7 +1,11 @@
 import os
 
-from inqbus.rainflow.run_rainflow import rainflow_for_hdf5, \
-    classification_for_hdf5
+from inqbus.rainflow.run_rainflow import rainflow_on_hdf5_file, \
+    classification_on_hdf5_file
+
+# Example for hdf5-file
+# rainflow_on_hdf5_file: run base algorithm, store pairs and counted pairs to file
+# classification_on_hdf5_file: classify results from rainflow_on_hdf5_file
 
 
 testdatafile = 'testdata.h5'
@@ -16,16 +20,16 @@ source_path = testdatafile + ':/testgroup/testdata'
 source_column = 'value'
 target_group = testdatafile + ':/statistics/testdata/value'
 
-rainflow_for_hdf5(source_path, source_column, target_group)
+rainflow_on_hdf5_file(source_path, source_column, target_group)
 
 
 # add some classification afterwards
 source_path = target_group + '/RF_Pairs'
 
-classification_for_hdf5(source_path,
-                        target_group,
-                        number_of_classifications=32,
-                        counted_table_name='RF_Counted_32',
-                        pairs_table_name='RF_Pairs_32')
+classification_on_hdf5_file(source_path,
+                            target_group,
+                            bin_count=32,
+                            counted_table_name='RF_Counted_32',
+                            pairs_table_name='RF_Pairs_32')
 
 print('Calculation finished have a look at hdf5-file.')

@@ -1,6 +1,8 @@
 import numpy as np
 import tables
 
+# Create a testfile used for example_hdf5
+
 print('Creating Testdata')
 # Table schema
 

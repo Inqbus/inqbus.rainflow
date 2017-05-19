@@ -9,15 +9,20 @@ from inqbus.rainflow.rainflow_algorithm.classification import classification
 from inqbus.rainflow.helpers import filter_data, get_extrema, count_pairs
 
 
-def rainflow_for_numpy(data, maximum=None, minimum=None, classification=None):
+def rainflow_on_numpy_array(
+        data,
+        maximum=None,
+        minimum=None,
+        bin_count=64,
+        classify=False):
     """
-    :param data: input data
+    :param classify: True if classification should be done
+    :param data: input data, 1d-numpy-array
     :param maximum: maximum value to be recognized. Values bigger than max
     will be filtered
     :param minimum: minimum value to be recognized. Values smaller than min
     will be filtered
-    :param classification: integer or None. If Integer the data will be
-    classified before rainflow
+    :param bin_count: integer for classification. Describes number of classes
     :return: result array with pairs, counted result array
 
     array with pairs is build like start, target
@@ -26,8 +31,8 @@ def rainflow_for_numpy(data, maximum=None, minimum=None, classification=None):
     if minimum or maximum:
         data = filter_data(data, minimum=minimum, maximum=maximum)
 
-    if classification:
-        data = classification(classification, data)
+    if classify:
+        data = classification(bin_count, data)
 
     local_extrema = get_extrema(data)
 
@@ -38,29 +43,31 @@ def rainflow_for_numpy(data, maximum=None, minimum=None, classification=None):
     return result_pairs, result_counted
 
 
-def classification_for_numpy(array, number_of_classes=64):
+def classification_on_numpy_array(array, bin_count=64):
     """
     Use this to add a classification after running the rainflow algorithm
 
     :param array: result array with pairs like returned from rainflow_for_numpy
-    :param number_of_classes: number of classes
-    :return: :return: result array with pairs, counted result array
+    :param bin_count: number of classes
+    :return:result array with pairs, counted result array
     """
-    res_pairs = classification(number_of_classes, array)
+    res_pairs = classification(bin_count, array)
     res_counted = count_pairs(res_pairs)
 
     return res_pairs, res_counted
 
 
-def rainflow_for_hdf5(source_table,
-                      source_column,
-                      target_group,
-                      counted_table_name='RF_Counted',
-                      pairs_table_name='RF_Pairs',
-                      maximum=None,
-                      minimum=None,
-                      classification_number=None):
+def rainflow_on_hdf5_file(source_table,
+                          source_column,
+                          target_group,
+                          counted_table_name='RF_Counted',
+                          pairs_table_name='RF_Pairs',
+                          maximum=None,
+                          minimum=None,
+                          bin_count=64,
+                          classify=False):
     """
+    :param classify: True if classification should be done
     :param pairs_table_name: Table name for storing Pairs
     :param counted_table_name: Table name for storing Counted Pairs
     :param source_table: hdf5-url for table where data should be read
@@ -70,8 +77,7 @@ def rainflow_for_hdf5(source_table,
     will be filtered
     :param minimum: minimum value to be recognized. Values smaller than min
     will be filtered
-    :param classification_number: integer or None. If Integer the data will be
-    classified before rainflow
+    :param bin_count: integer for classification. Describes number of classes
     :return:
     """
     source_table_obj = HDF5Table(source_table)
@@ -80,11 +86,12 @@ def rainflow_for_hdf5(source_table,
 
     source_table_obj.close()
 
-    result_pairs, result_counted = rainflow_for_numpy(
+    result_pairs, result_counted = rainflow_on_numpy_array(
         data,
         minimum=minimum,
         maximum=maximum,
-        classification=classification_number
+        bin_count=bin_count,
+        classify=classify
     )
 
     table_path_pairs = '/'.join([target_group, pairs_table_name])
@@ -105,18 +112,18 @@ def rainflow_for_hdf5(source_table,
     counted_table.close()
 
 
-def classification_for_hdf5(source_table,
-                            target_group,
-                            number_of_classifications=64,
-                            counted_table_name='RF_Counted_64',
-                            pairs_table_name='RF_Pairs_64'):
+def classification_on_hdf5_file(source_table,
+                                target_group,
+                                bin_count=64,
+                                counted_table_name='RF_Counted_64',
+                                pairs_table_name='RF_Pairs_64'):
     """
     Use this to add a classification after running the rainflow algorithm
 
     :param source_table: Table which includes pairs. Should be table like
     created in rainflow_for_hdf5
     :param target_group: hdf5-url where to store data
-    :param number_of_classifications: number of classes
+    :param bin_count: number of classes
     :param pairs_table_name: Table name for storing Pairs
     :param counted_table_name: Table name for storing Counted Pairs
     :return:
@@ -128,9 +135,9 @@ def classification_for_hdf5(source_table,
 
     data = np.stack((start, target), axis=-1)
 
-    result_pairs, result_counted = classification_for_numpy(
+    result_pairs, result_counted = classification_on_numpy_array(
         data,
-        number_of_classes=number_of_classifications
+        bin_count=bin_count
     )
 
     table_path_pairs = '/'.join([target_group, pairs_table_name])

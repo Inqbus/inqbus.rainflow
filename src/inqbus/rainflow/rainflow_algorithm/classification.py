@@ -2,10 +2,10 @@ import numexpr as ne
 import numpy as np
 
 
-def classification(number_of_classes, array):
+def classification(bin_count, array):
     """
     classifies 1d-array
-    :param number_of_classes: Number of bins
+    :param bin_count: Number of bins
     :param array: data to be classified
     :return: classified data as array
     """
@@ -13,7 +13,7 @@ def classification(number_of_classes, array):
     maximum = np.nanmax(array)
 
     # categories are calculated by value * factor + summand and rounded
-    factor = (1 - number_of_classes) / (minimum - maximum)
+    factor = (1 - bin_count) / (minimum - maximum)
     summand = -1 * minimum * factor + 1
 
     ex = 'value * factor + summand'
