@@ -2,11 +2,11 @@ import pyximport
 pyximport.install()
 import numpy as np
 
-from inqbus.rainflow.data_formats.hdf5 import HDF5Table, RFCTable, \
+from inqbus.rainflow.data_sources.hdf5 import HDF5Table, RFCTable, \
     RFCCountedTable
-from inqbus.rainflow.rainflow_algorithm.rainflow import rainflow
-from inqbus.rainflow.rainflow_algorithm.classification import classification
-from inqbus.rainflow.helpers import filter_data, get_extrema, count_pairs
+from inqbus.rainflow.rfc_base.rainflow import rainflow
+from inqbus.rainflow.rfc_base.classification import classification
+from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs
 
 
 def rainflow_on_numpy_array(
@@ -29,7 +29,7 @@ def rainflow_on_numpy_array(
     2d-array counted pairs with data like (start, target, count)
     """
     if minimum or maximum:
-        data = filter_data(data, minimum=minimum, maximum=maximum)
+        data = filter_outliers(data, minimum=minimum, maximum=maximum)
 
     if classify:
         data = classification(bin_count, data)

@@ -1,8 +1,6 @@
 import os
 
-from inqbus.rainflow.run_rainflow import rainflow_on_hdf5_file, \
-    classification_on_hdf5_file
-
+import inqbus.rainflow as rfc
 # Example for hdf5-file
 
 # rainflow_on_hdf5_file:
@@ -24,13 +22,13 @@ source_path = testdatafile + ':/testgroup/testdata'
 source_column = 'value'
 target_group = testdatafile + ':/statistics/testdata/value'
 
-rainflow_on_hdf5_file(source_path, source_column, target_group)
+rfc.rainflow_on_hdf5_file(source_path, source_column, target_group)
 
 
 # add some classification afterwards
 source_path = target_group + '/RF_Pairs'
 
-classification_on_hdf5_file(source_path,
+rfc.classification_on_hdf5_file(source_path,
                             target_group,
                             bin_count=32,
                             counted_table_name='RF_Counted_32',

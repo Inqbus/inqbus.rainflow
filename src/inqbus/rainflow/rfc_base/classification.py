@@ -13,8 +13,8 @@ def classification(bin_count, array):
     maximum = np.nanmax(array)
 
     # categories are calculated by value * factor + summand and rounded
-    factor = (1 - bin_count) / (minimum - maximum)
-    summand = -1 * minimum * factor + 1
+    factor = (1.0 - float(bin_count)) / (minimum - maximum)
+    summand = -1.0 * minimum * factor + 1.0
 
     ex = 'value * factor + summand'
 
