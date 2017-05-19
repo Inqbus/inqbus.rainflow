@@ -1,0 +1,9 @@
+HISTORY
+=======
+
+1.0 - Initial release
+---------------------
+
+* Rainflow for HDF5 and Numpy-Arrays
+* Classification before and after algorithm
+* Removing peaks from data before calculation
