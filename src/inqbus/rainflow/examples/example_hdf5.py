@@ -28,10 +28,10 @@ rfc.rainflow_on_hdf5_file(source_path, source_column, target_group)
 # add some classification afterwards
 source_path = target_group + '/RF_Pairs'
 
-rfc.classification_on_hdf5_file(source_path,
-                            target_group,
-                            bin_count=32,
-                            counted_table_name='RF_Counted_32',
-                            pairs_table_name='RF_Pairs_32')
+rfc.binning_on_hdf5_file(source_path,
+                         target_group,
+                         bin_count=32,
+                         counted_table_name='RF_Counted_32',
+                         pairs_table_name='RF_Pairs_32')
 
 print('Calculation finished have a look at hdf5-file.')

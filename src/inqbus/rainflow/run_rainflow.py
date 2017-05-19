@@ -5,7 +5,7 @@ import numpy as np
 from inqbus.rainflow.data_sources.hdf5 import HDF5Table, RFCTable, \
     RFCCountedTable
 from inqbus.rainflow.rfc_base.rainflow import rainflow
-from inqbus.rainflow.rfc_base.classification import classification
+from inqbus.rainflow.rfc_base.classification import binning
 from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs
 
 
@@ -32,7 +32,7 @@ def rainflow_on_numpy_array(
         data = filter_outliers(data, minimum=minimum, maximum=maximum)
 
     if classify:
-        data = classification(bin_count, data)
+        data = binning(bin_count, data)
 
     local_extrema = get_extrema(data)
 
@@ -43,7 +43,7 @@ def rainflow_on_numpy_array(
     return result_pairs, result_counted
 
 
-def classification_on_numpy_array(array, bin_count=64):
+def binning_on_numpy_array(array, bin_count=64):
     """
     Use this to add a classification after running the rainflow algorithm
 
@@ -52,7 +52,7 @@ def classification_on_numpy_array(array, bin_count=64):
     :param bin_count: number of classes
     :return:result array with pairs, counted result array
     """
-    res_pairs = classification(bin_count, array)
+    res_pairs = binning(bin_count, array)
     res_counted = count_pairs(res_pairs)
 
     return res_pairs, res_counted
@@ -113,11 +113,11 @@ def rainflow_on_hdf5_file(source_table,
     counted_table.close()
 
 
-def classification_on_hdf5_file(source_table,
-                                target_group,
-                                bin_count=64,
-                                counted_table_name='RF_Counted_64',
-                                pairs_table_name='RF_Pairs_64'):
+def binning_on_hdf5_file(source_table,
+                         target_group,
+                         bin_count=64,
+                         counted_table_name='RF_Counted_64',
+                         pairs_table_name='RF_Pairs_64'):
     """
     Use this to add a classification after running the rainflow algorithm
 
@@ -136,7 +136,7 @@ def classification_on_hdf5_file(source_table,
 
     data = np.stack((start, target), axis=-1)
 
-    result_pairs, result_counted = classification_on_numpy_array(
+    result_pairs, result_counted = binning_on_numpy_array(
         data,
         bin_count=bin_count
     )

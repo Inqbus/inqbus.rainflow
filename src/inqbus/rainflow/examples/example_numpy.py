@@ -21,5 +21,5 @@ res, res_counted = rfc.rainflow_on_numpy_array(data)
 print(res, res_counted)
 
 # add some classifications afterwards
-res_32, res_counted_32 = rfc.classification_on_numpy_array(res, bin_count=32)
+res_32, res_counted_32 = rfc.binning_on_numpy_array(res, bin_count=32)
 print(res_32, res_counted_32)

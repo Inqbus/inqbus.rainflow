@@ -2,7 +2,7 @@ import numexpr as ne
 import numpy as np
 
 
-def classification(bin_count, array):
+def binning(bin_count, array):
     """
     classifies 1d-array
     :param bin_count: Number of bins
