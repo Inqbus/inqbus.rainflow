@@ -1,0 +1,4 @@
+global-include *.pyx
+global-include *.pyxbld
+global-include *.rst
+global-include *.txt
