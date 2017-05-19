@@ -25,8 +25,8 @@ def rainflow_on_numpy_array(
     :param bin_count: integer for classification. Describes number of classes
     :return: array with pairs, array with counted pairs
 
-    2d-array pairs with columns like start, target
-    2d-array counted pairs with columns like start, target, count
+    2d-array pairs with data like (start, target)
+    2d-array counted pairs with data like (start, target, count)
     """
     if minimum or maximum:
         data = filter_data(data, minimum=minimum, maximum=maximum)
@@ -48,7 +48,7 @@ def classification_on_numpy_array(array, bin_count=64):
     Use this to add a classification after running the rainflow algorithm
 
     :param array: result array with pairs like returned from
-    rainflow_on_numpy_array; 2d-array with columns like start, target
+    rainflow_on_numpy_array; 2d-array with data like (start, target)
     :param bin_count: number of classes
     :return:result array with pairs, counted result array
     """
