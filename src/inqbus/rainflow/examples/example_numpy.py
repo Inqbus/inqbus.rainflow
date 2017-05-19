@@ -4,8 +4,12 @@ from inqbus.rainflow.run_rainflow import rainflow_on_numpy_array, \
     classification_on_numpy_array
 
 # Example for numpy array
-# rainflow_on_numpy_array: run base algorithm, return pairs and counted pairs
-# classification_on_numpy_array: classify results from rainflow_on_numpy_array
+
+# rainflow_on_numpy_array:
+# run base algorithm, return pairs and counted pairs
+
+# classification_on_numpy_array:
+# classify results from rainflow_on_numpy_array
 
 # example data
 N = 1000000

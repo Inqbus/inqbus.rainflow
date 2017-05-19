@@ -4,8 +4,12 @@ from inqbus.rainflow.run_rainflow import rainflow_on_hdf5_file, \
     classification_on_hdf5_file
 
 # Example for hdf5-file
-# rainflow_on_hdf5_file: run base algorithm, store pairs and counted pairs to file
-# classification_on_hdf5_file: classify results from rainflow_on_hdf5_file
+
+# rainflow_on_hdf5_file:
+# run base algorithm, store pairs and counted pairs to file
+
+# classification_on_hdf5_file:
+# classify results from rainflow_on_hdf5_file
 
 
 testdatafile = 'testdata.h5'
