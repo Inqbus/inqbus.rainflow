@@ -17,6 +17,10 @@ class MissingTableClass(Exception):
     pass
 
 
+class TableNotFound(Exception):
+    pass
+
+
 class HDF5Table(object):
 
     def __init__(self, path,
@@ -47,48 +51,57 @@ class HDF5Table(object):
             self.find_table()
 
     def close(self):
-        if self.table:
+        if self.table is not None:
             self.table.flush()
         self.file.close()
 
     def read_from_file(self, column):
-        table_data = pd.DataFrame.from_records(self.table.read())
+        if self.table is not None:
+            table_data = pd.DataFrame.from_records(self.table.read())
+        else:
+            raise TableNotFound()
 
         data = table_data[column].values
         return data
 
     def write_to_file(self, array):
-        self.table.append(array)
-        self.table.flush()
+        if self.table is not None:
+            self.table.append(array)
+            self.table.flush()
+        else:
+            raise TableNotFound()
+
+    def write_array_to_file(self, array):
+        self.find_table()
+        if self.table is not None:
+            self.remove()
+
+        path_elements = self.table_path.split('/')
+        table_name = path_elements.pop()
+        node_path = '/'.join(path_elements)
+
+        self.table = self.file.create_array(node_path,
+                                            table_name,
+                                            array,
+                                            createparents=True)
 
     def create_empty_table(self, table_class):
         path_elements = self.table_path.split('/')
         table_name = path_elements.pop()
-        node_path = '/'.join(path_elements) + '/'
-
-        path = ""
-        for path_element in path_elements:
-            old_path = path
-            path += path_element + "/"
-            try:
-                self.file.get_node(path, "")
-            except tables.NoSuchNodeError:
-                self.file.create_group(old_path, path_element,
-                                       path_element)
+        node_path = '/'.join(path_elements)
 
         self.table = self.file.create_table(
             node_path,
             table_name,
             table_class,
             table_name,
+            createparents=True
         )
 
     def remove(self):
-        path_elements = self.table_path.split('/')
-        table_name = path_elements.pop()
-        node_path = '/'.join(path_elements) + '/'
+        node_path = self.table_path
         try:
-            self.file.remove_node(node_path, name=table_name)
+            self.file.remove_node(node_path)
         except tables.exceptions.NoSuchNodeError:
             pass
         self.table = None
@@ -96,5 +109,8 @@ class HDF5Table(object):
     def find_table(self):
         path_elements = self.table_path.split('/')
         table_name = path_elements.pop()
-        node_path = '/'.join(path_elements) + '/'
-        self.table = self.file.get_node(node_path, table_name)
+        node_path = '/'.join(path_elements)
+        try:
+            self.table = self.file.get_node(node_path, table_name)
+        except tables.exceptions.NoSuchNodeError:
+            self.table = None

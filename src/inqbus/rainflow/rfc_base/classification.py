@@ -4,7 +4,7 @@ import numpy as np
 
 def binning(bin_count, array):
     """
-    classifies 1d-array
+    classifies array
     :param bin_count: Number of bins
     :param array: data to be classified
     :return: classified data as array
@@ -28,3 +28,23 @@ def binning(bin_count, array):
         0)
 
     return classified_data
+
+
+def binning_as_matrix(bin_count, array):
+    """
+    :param bin_count:
+    :param array:
+    :return: data matrix with start in rows and target in columns
+    """
+
+    # fit data to number of bins if this is not done, data outside bin-range
+    # would be ignored
+    binned_data = binning(bin_count, array)
+
+    start = binned_data[:, 0]
+    target = binned_data[:, 1]
+    bins = range(1, bin_count + 1)
+
+    classified_data = np.histogram2d(start, target, bins=bins)
+
+    return classified_data[0]

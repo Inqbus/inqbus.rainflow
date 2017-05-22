@@ -36,12 +36,16 @@ def count_pairs(data):
     # first we create groups for each pair and take size of each group as count.
     # counts is a pandas.Series with the pairs as index
     counts = df.groupby([start, target]).size()
+
     # than we remove duplicate pairs from original dateframe,
     # so length and counts are equal in size
     df = df.drop_duplicates()
 
+    # reset index to values of pairs to fit index of counts
+    df.set_index([0, 1], inplace=True, drop=False)
+
     # now we append the counts as column to the original data
-    df[2] = pd.Series(counts.values, index=df.index)
+    df[2] = pd.Series(counts.values, index=counts.index)
 
     # just cast pandas-dataframe back to numpy 2d-array usable for following
     # steps

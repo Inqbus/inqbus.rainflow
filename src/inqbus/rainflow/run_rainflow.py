@@ -5,7 +5,7 @@ import numpy as np
 from inqbus.rainflow.data_sources.hdf5 import HDF5Table, RFCTable, \
     RFCCountedTable
 from inqbus.rainflow.rfc_base.rainflow import rainflow
-from inqbus.rainflow.rfc_base.classification import binning
+from inqbus.rainflow.rfc_base.classification import binning, binning_as_matrix
 from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs
 
 
@@ -43,7 +43,7 @@ def rainflow_on_numpy_array(
     return result_pairs, result_counted
 
 
-def binning_on_numpy_array(array, bin_count=64):
+def binning_as_table_on_numpy_array(array, bin_count=64):
     """
     Use this to add a classification after running the rainflow algorithm
 
@@ -56,6 +56,21 @@ def binning_on_numpy_array(array, bin_count=64):
     res_counted = count_pairs(res_pairs)
 
     return res_pairs, res_counted
+
+
+def binning_as_matrix_on_numpy_array(array, bin_count=64):
+    """
+    Use this to get classified data as matrix after rainflow-algorithm
+
+    :param array: result array with pairs like returned from
+    rainflow_on_numpy_array; 2d-array with data like (start, target)
+    :param bin_count: number of classes
+    :return:result array with shape (bin_count, bin_count) showing the count of
+    pairs as 2d-histo with start in rows and target in columns
+    """
+    res_matrix = binning_as_matrix(bin_count, array)
+
+    return res_matrix
 
 
 def rainflow_on_hdf5_file(source_table,
@@ -113,11 +128,11 @@ def rainflow_on_hdf5_file(source_table,
     counted_table.close()
 
 
-def binning_on_hdf5_file(source_table,
-                         target_group,
-                         bin_count=64,
-                         counted_table_name='RF_Counted_64',
-                         pairs_table_name='RF_Pairs_64'):
+def binning_as_table_on_hdf5_file(source_table,
+                                  target_group,
+                                  bin_count=64,
+                                  counted_table_name='RF_Counted_64',
+                                  pairs_table_name='RF_Pairs_64'):
     """
     Use this to add a classification after running the rainflow algorithm
 
@@ -127,7 +142,7 @@ def binning_on_hdf5_file(source_table,
     :param bin_count: number of classes
     :param pairs_table_name: Table name for storing Pairs
     :param counted_table_name: Table name for storing Counted Pairs
-    :return:
+
     """
     source_table_ob = HDF5Table(source_table)
     start = source_table_ob.read_from_file('start')
@@ -136,7 +151,7 @@ def binning_on_hdf5_file(source_table,
 
     data = np.stack((start, target), axis=-1)
 
-    result_pairs, result_counted = binning_on_numpy_array(
+    result_pairs, result_counted = binning_as_table_on_numpy_array(
         data,
         bin_count=bin_count
     )
@@ -157,3 +172,42 @@ def binning_on_hdf5_file(source_table,
         create_empty_table=True)
     counted_table.write_to_file(result_counted)
     counted_table.close()
+
+
+def binning_as_matrix_on_hdf5_file(source_table,
+                                   target_group,
+                                   bin_count=64,
+                                   counted_table_name='RF_Matrix_64',):
+    """
+    Use this to add a classification after running the rainflow algorithm
+
+    :param source_table: Table which includes pairs. Should be table like
+    created in rainflow_for_hdf5
+    :param target_group: hdf5-url where to store data
+    :param bin_count: number of classes
+    :param pairs_table_name: Table name for storing Pairs
+    :param counted_table_name: Table name for storing Counted Pairs
+
+    stores result array with shape (bin_count, bin_count) showing the count of
+    pairs as 2d-histo with start in rows and target in columns
+    """
+    source_table_ob = HDF5Table(source_table)
+    start = source_table_ob.read_from_file('start')
+    target = source_table_ob.read_from_file('target')
+    source_table_ob.close()
+
+    data = np.stack((start, target), axis=-1)
+
+    result_matrix = binning_as_matrix_on_numpy_array(
+        data,
+        bin_count=bin_count
+    )
+
+    table_path_counted = '/'.join([target_group, counted_table_name])
+
+    pairs_table = HDF5Table(
+        table_path_counted,
+        table_class='',
+        create_empty_table=False)
+    pairs_table.write_array_to_file(result_matrix)
+    pairs_table.close()
