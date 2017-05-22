@@ -32,6 +32,10 @@ def binning_as_matrix(bin_count, array, minimum=None, maximum=None):
     """
     :param bin_count:
     :param array:
+    :param maximum: maximum value to be recognized. Values bigger than max
+    will be filtered
+    :param minimum: minimum value to be recognized. Values smaller than min
+    will be filtered
     :return: data matrix with start in rows and target in columns
     """
 
