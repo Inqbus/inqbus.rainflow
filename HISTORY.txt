@@ -8,6 +8,7 @@ HISTORY
 * Added examples for both
 * BugFix in count-method
 * Style improvements
+* Filter outliers in binning
 
 0.2 - Syntax Improvement
 ------------------------

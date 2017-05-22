@@ -12,25 +12,23 @@ def binning(bin_count, array):
     minimum = np.nanmin(array)
     maximum = np.nanmax(array)
 
-    # categories are calculated by value * factor + summand and rounded
-    factor = (0.0 - (float(bin_count) - 1)) / (minimum - maximum)
-    summand = -1.0 * minimum * factor
-
-    ex = 'value * factor + summand'
+    ex = 'value * (0.0 - (bin_count - 1.0)) / (minimum - maximum) +' + \
+         '(-1.0 * minimum * (0.0 - (bin_count - 1.0)) / (minimum - maximum))'
 
     classified_data = np.round(
         ne.evaluate(
             ex,
             local_dict={
                 'value': array,
-                'factor': factor,
-                'summand': summand}),
+                'bin_count': float(bin_count),
+                'minimum': minimum,
+                'maximum': maximum}),
         0)
 
     return classified_data
 
 
-def binning_as_matrix(bin_count, array):
+def binning_as_matrix(bin_count, array, minimum=None, maximum=None):
     """
     :param bin_count:
     :param array:
@@ -39,8 +37,10 @@ def binning_as_matrix(bin_count, array):
 
     # Bilding a 2d-histogram
 
-    minimum = np.nanmin(array)
-    maximum = np.nanmax(array)
+    if not minimum:
+        minimum = np.nanmin(array)
+    if not maximum:
+        maximum = np.nanmax(array)
 
     start = array[:, 0]
     target = array[:, 1]

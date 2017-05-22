@@ -104,41 +104,65 @@ class Rainflow(object):
 class Binning(object):
 
     @staticmethod
-    def as_table_on_numpy_array(array, bin_count=64):
+    def as_table_on_numpy_array(
+            array,
+            bin_count=64,
+            maximum=None,
+            minimum=None):
         """
         Use this to add a classification after running the rainflow algorithm
 
         :param array: result array with pairs like returned from
         rainflow_on_numpy_array; 2d-array with data like (start, target)
         :param bin_count: number of classes
+        :param maximum: maximum value to be recognized. Values bigger than max
+        will be filtered
+        :param minimum: minimum value to be recognized. Values smaller than min
+        will be filtered
         :return:result array with pairs, counted result array
         """
+        if minimum or maximum:
+            array = filter_outliers(array, minimum=minimum, maximum=maximum)
+
         res_pairs = binning(bin_count, array)
         res_counted = count_pairs(res_pairs)
 
         return res_pairs, res_counted
 
     @staticmethod
-    def as_matrix_on_numpy_array(array, bin_count=64):
+    def as_matrix_on_numpy_array(
+            array,
+            bin_count=64,
+            maximum=None,
+            minimum=None):
         """
         Use this to get classified data as matrix after rainflow-algorithm
 
         :param array: result array with pairs like returned from
         rainflow_on_numpy_array; 2d-array with data like (start, target)
         :param bin_count: number of classes
+        :param maximum: maximum value to be recognized. Values bigger than max
+        will be filtered
+        :param minimum: minimum value to be recognized. Values smaller than min
+        will be filtered
         :return:result array with shape (bin_count, bin_count) showing the count of
         pairs as 2d-histo with start in rows and target in columns
         """
-        res_matrix = binning_as_matrix(bin_count, array)
+
+        res_matrix = binning_as_matrix(
+            bin_count, array, minimum=minimum, maximum=maximum)
 
         return res_matrix
 
     @staticmethod
-    def as_table_on_hdf5_file(source_table,
-                              target_group,
-                              bin_count=64,
-                              counted_table_name='RF_Counted_64',
-                              pairs_table_name='RF_Pairs_64'):
+    def as_table_on_hdf5_file(
+            source_table,
+            target_group,
+            bin_count=64,
+            counted_table_name='RF_Counted_64',
+            pairs_table_name='RF_Pairs_64',
+            maximum=None,
+            minimum=None):
         """
         Use this to add a classification after running the rainflow algorithm
 
@@ -147,6 +171,10 @@ class Binning(object):
         :param target_group: hdf5-url where to store data
         :param bin_count: number of classes
         :param pairs_table_name: Table name for storing Pairs
+        :param maximum: maximum value to be recognized. Values bigger than max
+        will be filtered
+        :param minimum: minimum value to be recognized. Values smaller than min
+        will be filtered
         :param counted_table_name: Table name for storing Counted Pairs
 
         """
@@ -159,7 +187,9 @@ class Binning(object):
 
         result_pairs, result_counted = Binning.as_table_on_numpy_array(
             data,
-            bin_count=bin_count
+            bin_count=bin_count,
+            minimum=minimum,
+            maximum=maximum
         )
 
         table_path_pairs = '/'.join([target_group, pairs_table_name])
@@ -180,10 +210,13 @@ class Binning(object):
         counted_table.close()
 
     @staticmethod
-    def as_matrix_on_hdf5_file(source_table,
-                               target_group,
-                               bin_count=64,
-                               counted_table_name='RF_Matrix_64',):
+    def as_matrix_on_hdf5_file(
+            source_table,
+            target_group,
+            bin_count=64,
+            counted_table_name='RF_Matrix_64',
+            maximum=None,
+            minimum=None):
         """
         Use this to add a classification after running the rainflow algorithm
 
@@ -192,6 +225,10 @@ class Binning(object):
         :param target_group: hdf5-url where to store data
         :param bin_count: number of classes
         :param pairs_table_name: Table name for storing Pairs
+        :param maximum: maximum value to be recognized. Values bigger than max
+        will be filtered
+        :param minimum: minimum value to be recognized. Values smaller than min
+        will be filtered
         :param counted_table_name: Table name for storing Counted Pairs
 
         stores result array with shape (bin_count, bin_count) showing the count of
@@ -206,7 +243,9 @@ class Binning(object):
 
         result_matrix = Binning.as_matrix_on_numpy_array(
             data,
-            bin_count=bin_count
+            bin_count=bin_count,
+            minimum=minimum,
+            maximum=maximum
         )
 
         table_path_counted = '/'.join([target_group, counted_table_name])
