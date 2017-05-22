@@ -7,6 +7,7 @@ HISTORY
 * User can decide between matrix and table format for classification
 * Added examples for both
 * BugFix in count-method
+* Style improvements
 
 0.2 - Syntax Improvement
 ------------------------

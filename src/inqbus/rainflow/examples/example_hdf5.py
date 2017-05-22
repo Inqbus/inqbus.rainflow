@@ -3,15 +3,15 @@ import os
 import inqbus.rainflow as rfc
 # Example for hdf5-file
 
-# rainflow_on_hdf5_file:
+# Rainflow.on_hdf5_file:
 # run base algorithm, store pairs and counted pairs to file
 
-# binning_as_table_on_hdf5_file:
-# classify results from rainflow_on_hdf5_file
+# Binning.as_table_on_hdf5_file:
+# classify results from Rainflow.on_hdf5_file
 # stored a table with pairs and a table with counted pairs as table
 
-# binning_as_matrix_on_hdf5_file:
-# classify results from rainflow_on_numpy_array
+# Binning.as_matrix_on_hdf5_file:
+# classify results from Rainflow.on_numpy_array
 # stores a 2d-array matrix like traditional rainflow matrix with
 # start in rows and target in columns
 
@@ -29,19 +29,19 @@ source_path = testdatafile + ':/testgroup/testdata'
 source_column = 'value'
 target_group = testdatafile + ':/statistics/testdata/value'
 
-rfc.rainflow_on_hdf5_file(source_path, source_column, target_group)
+rfc.Rainflow.on_hdf5_file(source_path, source_column, target_group)
 
 
 # add some classification afterwards
 source_path = target_group + '/RF_Pairs'
 
-rfc.binning_as_table_on_hdf5_file(source_path,
+rfc.Binning.as_table_on_hdf5_file(source_path,
                                   target_group,
                                   bin_count=32,
                                   counted_table_name='RF_Counted_32',
                                   pairs_table_name='RF_Pairs_32')
 
-rfc.binning_as_matrix_on_hdf5_file(source_path,
+rfc.Binning.as_matrix_on_hdf5_file(source_path,
                                    target_group,
                                    bin_count=32,
                                    counted_table_name='RF_Matrix_32')
