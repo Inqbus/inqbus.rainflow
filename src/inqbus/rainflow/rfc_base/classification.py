@@ -43,7 +43,7 @@ def binning_as_matrix(bin_count, array):
 
     start = binned_data[:, 0]
     target = binned_data[:, 1]
-    bins = range(1, bin_count + 1)
+    bins = range(1, bin_count + 2)
 
     classified_data = np.histogram2d(start, target, bins=bins)
 
