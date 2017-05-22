@@ -13,7 +13,7 @@ def binning(bin_count, array):
     maximum = np.nanmax(array)
 
     # categories are calculated by value * factor + summand and rounded
-    factor = (float(bin_count) - 1) / (minimum - maximum)
+    factor = (0.0 - (float(bin_count) - 1)) / (minimum - maximum)
     summand = -1.0 * minimum * factor
 
     ex = 'value * factor + summand'
@@ -39,12 +39,13 @@ def binning_as_matrix(bin_count, array):
 
     # Bilding a 2d-histogram
 
-    binned_data = binning(bin_count, array)
+    minimum = np.nanmin(array)
+    maximum = np.nanmax(array)
 
-    start = binned_data[:, 0]
-    target = binned_data[:, 1]
-    bins = range(0, bin_count + 1)
+    start = array[:, 0]
+    target = array[:, 1]
 
-    classified_data = np.histogram2d(start, target, bins=bins)
+    classified_data = np.histogram2d(start, target, bins=bin_count, range=[
+                                     [minimum, maximum], [minimum, maximum]])
 
     return classified_data[0]
