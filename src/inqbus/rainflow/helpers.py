@@ -77,17 +77,24 @@ def append_axis(data, bin_count, axis=[]):
     vertical_axis = np.array(range(0, bin_count)) * 1.0
 
     if 'top' in axis:
+        # vertical axis increases length by one in the upper corner
         vertical_axis = np.append(np.NaN, vertical_axis)
+        # append upper axis
         data = np.vstack((horizontal_axis, data))
     if 'bottom' in axis:
+        # vertical axis increases length by one in the bottom corner
         vertical_axis = np.append(vertical_axis, np.NaN)
+        # append bottom axis
         data = np.vstack((data, horizontal_axis))
 
+    # reshape to a column
     vertical_axis = vertical_axis.reshape((vertical_axis.size, 1))
 
     if 'left' in axis:
+        # append on left sids
         data = np.hstack((vertical_axis, data))
     if 'right' in axis:
+        # append on right site
         data = np.hstack((data, vertical_axis))
 
 
