@@ -10,6 +10,16 @@ def filter_outliers(data, minimum=None, maximum=None):
     return data
 
 
+def filter_outliers_on_pairs(data, minimum=None, maximum=None):
+    if minimum is not None:
+        data = data[:,data[0]>=minimum]
+        data = data[:,data[1]>=minimum]
+    if maximum is not None:
+        data = data[:,data[0]<=maximum]
+        data = data[:, data[1]<=maximum]
+    return data
+
+
 def get_extrema(data):
 
     # find extrema by finding indexes where diff changes sign

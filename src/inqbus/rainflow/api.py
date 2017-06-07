@@ -6,7 +6,8 @@ from inqbus.rainflow.data_sources.hdf5 import HDF5Table, RFCTable, \
     RFCCountedTable
 from inqbus.rainflow.rfc_base.rainflow import rainflow
 from inqbus.rainflow.rfc_base.classification import binning, binning_as_matrix
-from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs
+from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs, \
+    filter_outliers_on_pairs
 
 
 class Rainflow(object):
@@ -122,7 +123,7 @@ class Binning(object):
         :return:result array with pairs, counted result array
         """
         if minimum or maximum:
-            array = filter_outliers(array, minimum=minimum, maximum=maximum)
+            array = filter_outliers_on_pairs(array, minimum=minimum, maximum=maximum)
 
         res_pairs = binning(bin_count, array)
         res_counted = count_pairs(res_pairs)

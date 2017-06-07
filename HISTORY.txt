@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+0.5 - BugFixes
+--------------
+
+* Fixed Bug on filtering data with pairs
+
 0.4 - Added Matrix-calculation
 -------------------------------
 
