@@ -12,11 +12,11 @@ def filter_outliers(data, minimum=None, maximum=None):
 
 def filter_outliers_on_pairs(data, minimum=None, maximum=None):
     if minimum is not None:
-        data = data[:,data[0]>=minimum]
-        data = data[:,data[1]>=minimum]
+        data = data[:, data[0] >= minimum]
+        data = data[:, data[1] >= minimum]
     if maximum is not None:
-        data = data[:,data[0]<=maximum]
-        data = data[:, data[1]<=maximum]
+        data = data[:, data[0] <= maximum]
+        data = data[:, data[1] <= maximum]
     return data
 
 
@@ -61,3 +61,34 @@ def count_pairs(data):
     # steps
     array = df.values
     return array
+
+def append_axis(data, bin_count, axis=[]):
+    """
+    :param data: matrix where axis should be added
+    :param bin_count: numer of bins
+    :param axis: list of placements for axis. Possible list-elements are:
+            * 'bottom'
+            * 'left'
+            * 'right'
+            * 'top'
+    :return: matrix (2d-array) with axis
+    """
+    horizontal_axis = np.array(range(0, bin_count)) * 1.0
+    vertical_axis = np.array(range(0, bin_count)) * 1.0
+
+    if 'top' in axis:
+        vertical_axis = np.append(np.NaN, vertical_axis)
+        data = np.vstack((horizontal_axis, data))
+    if 'bottom' in axis:
+        vertical_axis = np.append(vertical_axis, np.NaN)
+        data = np.vstack((data, horizontal_axis))
+
+    vertical_axis = vertical_axis.reshape((vertical_axis.size, 1))
+
+    if 'left' in axis:
+        data = np.hstack((vertical_axis, data))
+    if 'right' in axis:
+        data = np.hstack((data, vertical_axis))
+
+
+    return data

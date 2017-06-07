@@ -44,6 +44,7 @@ rfc.Binning.as_table_on_hdf5_file(source_path,
 rfc.Binning.as_matrix_on_hdf5_file(source_path,
                                    target_group,
                                    bin_count=32,
-                                   counted_table_name='RF_Matrix_32')
+                                   counted_table_name='RF_Matrix_32',
+                                   axis=['top', 'left', 'bottom', 'right'])
 
 print('Calculation finished have a look at hdf5-file.')

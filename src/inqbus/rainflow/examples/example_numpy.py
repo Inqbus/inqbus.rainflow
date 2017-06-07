@@ -30,5 +30,6 @@ print(res, res_counted)
 res_32, res_counted_32 = rfc.Binning.as_table_on_numpy_array(res, bin_count=32)
 print(res_32, res_counted_32)
 
-matrix_32 = rfc.Binning.as_matrix_on_numpy_array(res, bin_count=32)
+matrix_32 = rfc.Binning.as_matrix_on_numpy_array(
+    res, bin_count=32, axis=['top', 'left', 'bottom', 'right'])
 print(matrix_32)

@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+0.6 - Add Axis to matrix
+------------------------
+
+* You can store axis to matrix if you want using parameter axis
+
 0.5 - BugFixes
 --------------
 

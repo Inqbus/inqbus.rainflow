@@ -7,7 +7,7 @@ from inqbus.rainflow.data_sources.hdf5 import HDF5Table, RFCTable, \
 from inqbus.rainflow.rfc_base.rainflow import rainflow
 from inqbus.rainflow.rfc_base.classification import binning, binning_as_matrix
 from inqbus.rainflow.helpers import filter_outliers, get_extrema, count_pairs, \
-    filter_outliers_on_pairs
+    filter_outliers_on_pairs, append_axis
 
 
 class Rainflow(object):
@@ -123,7 +123,8 @@ class Binning(object):
         :return:result array with pairs, counted result array
         """
         if minimum or maximum:
-            array = filter_outliers_on_pairs(array, minimum=minimum, maximum=maximum)
+            array = filter_outliers_on_pairs(
+                array, minimum=minimum, maximum=maximum)
 
         res_pairs = binning(bin_count, array)
         res_counted = count_pairs(res_pairs)
@@ -135,7 +136,8 @@ class Binning(object):
             array,
             bin_count=64,
             maximum=None,
-            minimum=None):
+            minimum=None,
+            axis=[]):
         """
         Use this to get classified data as matrix after rainflow-algorithm
 
@@ -146,12 +148,20 @@ class Binning(object):
         will be filtered
         :param minimum: minimum value to be recognized. Values smaller than min
         will be filtered
+        :param axis: list of placements for axis. Possible list-elements are:
+            * 'bottom'
+            * 'left'
+            * 'right'
+            * 'top'
         :return:result array with shape (bin_count, bin_count) showing the count of
         pairs as 2d-histo with start in rows and target in columns
         """
 
         res_matrix = binning_as_matrix(
             bin_count, array, minimum=minimum, maximum=maximum)
+
+        if axis:
+            res_matrix = append_axis(res_matrix, bin_count, axis)
 
         return res_matrix
 
@@ -217,10 +227,16 @@ class Binning(object):
             bin_count=64,
             counted_table_name='RF_Matrix_64',
             maximum=None,
-            minimum=None):
+            minimum=None,
+            axis=[]):
         """
         Use this to add a classification after running the rainflow algorithm
 
+        :param axis: list of placements for axis. Possible list-elements are:
+            * 'bottom'
+            * 'left'
+            * 'right'
+            * 'top'
         :param source_table: Table which includes pairs. Should be table like
         created in rainflow_for_hdf5
         :param target_group: hdf5-url where to store data
@@ -246,7 +262,8 @@ class Binning(object):
             data,
             bin_count=bin_count,
             minimum=minimum,
-            maximum=maximum
+            maximum=maximum,
+            axis=axis,
         )
 
         table_path_counted = '/'.join([target_group, counted_table_name])
