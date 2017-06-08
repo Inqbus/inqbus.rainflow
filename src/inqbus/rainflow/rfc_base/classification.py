@@ -1,6 +1,8 @@
 import numexpr as ne
 import numpy as np
 
+from inqbus.rainflow.helpers import append_axis
+
 
 def binning(bin_count, array):
     """
@@ -28,7 +30,7 @@ def binning(bin_count, array):
     return classified_data
 
 
-def binning_as_matrix(bin_count, array, minimum=None, maximum=None):
+def binning_as_matrix(bin_count, array, minimum=None, maximum=None, axis=[]):
     """
     :param bin_count:
     :param array:
@@ -36,6 +38,11 @@ def binning_as_matrix(bin_count, array, minimum=None, maximum=None):
     will be filtered
     :param minimum: minimum value to be recognized. Values smaller than min
     will be filtered
+    :param axis: list of placements for axis. Possible list-elements are:
+            * 'bottom'
+            * 'left'
+            * 'right'
+            * 'top'
     :return: data matrix with start in rows and target in columns
     """
 
@@ -52,4 +59,13 @@ def binning_as_matrix(bin_count, array, minimum=None, maximum=None):
     classified_data = np.histogram2d(start, target, bins=bin_count, range=[
                                      [minimum, maximum], [minimum, maximum]])
 
-    return classified_data[0]
+    res_matrix = classified_data[0]
+    intervall_edges = classified_data[1]
+
+    axis_value = np.diff(intervall_edges) / 2.0 + intervall_edges[0:-1]
+
+    if axis:
+        res_matrix = append_axis(res_matrix, horizontal_axis=axis_value,
+                                 vertical_axis=axis_value, axis=axis)
+
+    return res_matrix

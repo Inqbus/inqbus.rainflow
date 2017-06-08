@@ -158,10 +158,7 @@ class Binning(object):
         """
 
         res_matrix = binning_as_matrix(
-            bin_count, array, minimum=minimum, maximum=maximum)
-
-        if axis:
-            res_matrix = append_axis(res_matrix, bin_count, axis)
+            bin_count, array, minimum=minimum, maximum=maximum, axis=axis)
 
         return res_matrix
 
