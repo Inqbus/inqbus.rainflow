@@ -1,6 +1,12 @@
 HISTORY
 =======
 
+0.7 - Remove small cycles option
+--------------------------------
+
+* During normal rainflow cycles like 1 to 1 can not exist, but with the classification afterwards small cycles will lead to such pairs. They will be removed now
+
+
 0.6 - Add Axis to matrix
 ------------------------
 

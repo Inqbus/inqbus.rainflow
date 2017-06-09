@@ -109,10 +109,13 @@ class Binning(object):
             array,
             bin_count=64,
             maximum=None,
-            minimum=None):
+            minimum=None,
+            remove_small_cycles=True):
         """
         Use this to add a classification after running the rainflow algorithm
 
+        :param remove_small_cycles: if True cycles where start and end are
+        identical after binning will be removed
         :param array: result array with pairs like returned from
         rainflow_on_numpy_array; 2d-array with data like (start, target)
         :param bin_count: number of classes
@@ -124,9 +127,14 @@ class Binning(object):
         """
         if minimum or maximum:
             array = filter_outliers_on_pairs(
-                array, minimum=minimum, maximum=maximum)
+                array,
+                minimum=minimum,
+                maximum=maximum)
 
-        res_pairs = binning(bin_count, array)
+        res_pairs = binning(
+            bin_count,
+            array,
+            remove_small_cycles=remove_small_cycles)
         res_counted = count_pairs(res_pairs)
 
         return res_pairs, res_counted
@@ -137,10 +145,13 @@ class Binning(object):
             bin_count=64,
             maximum=None,
             minimum=None,
-            axis=[]):
+            axis=[],
+            remove_small_cycles=True):
         """
         Use this to get classified data as matrix after rainflow-algorithm
 
+        :param remove_small_cycles: if True cycles where start and end are
+        identical after binning will be removed
         :param array: result array with pairs like returned from
         rainflow_on_numpy_array; 2d-array with data like (start, target)
         :param bin_count: number of classes
@@ -158,7 +169,12 @@ class Binning(object):
         """
 
         res_matrix = binning_as_matrix(
-            bin_count, array, minimum=minimum, maximum=maximum, axis=axis)
+            bin_count,
+            array,
+            minimum=minimum,
+            maximum=maximum,
+            axis=axis,
+            remove_small_cycles=remove_small_cycles)
 
         return res_matrix
 
@@ -170,10 +186,13 @@ class Binning(object):
             counted_table_name='RF_Counted_64',
             pairs_table_name='RF_Pairs_64',
             maximum=None,
-            minimum=None):
+            minimum=None,
+            remove_small_cycles=True):
         """
         Use this to add a classification after running the rainflow algorithm
 
+        :param remove_small_cycles: if True cycles where start and end are
+        identical after binning will be removed
         :param source_table: Table which includes pairs. Should be table like
         created in rainflow_for_hdf5
         :param target_group: hdf5-url where to store data
@@ -197,7 +216,8 @@ class Binning(object):
             data,
             bin_count=bin_count,
             minimum=minimum,
-            maximum=maximum
+            maximum=maximum,
+            remove_small_cycles=remove_small_cycles
         )
 
         table_path_pairs = '/'.join([target_group, pairs_table_name])
@@ -225,10 +245,13 @@ class Binning(object):
             counted_table_name='RF_Matrix_64',
             maximum=None,
             minimum=None,
-            axis=[]):
+            axis=[],
+            remove_small_cycles=True):
         """
         Use this to add a classification after running the rainflow algorithm
 
+        :param remove_small_cycles: if True cycles where start and end
+        are identical after binning will be removed
         :param axis: list of placements for axis. Possible list-elements are:
             * 'bottom'
             * 'left'
@@ -261,6 +284,7 @@ class Binning(object):
             minimum=minimum,
             maximum=maximum,
             axis=axis,
+            remove_small_cycles=remove_small_cycles
         )
 
         table_path_counted = '/'.join([target_group, counted_table_name])

@@ -4,11 +4,13 @@ import numpy as np
 from inqbus.rainflow.helpers import append_axis
 
 
-def binning(bin_count, array):
+def binning(bin_count, array, remove_small_cycles=True):
     """
     classifies array
     :param bin_count: Number of bins
     :param array: data to be classified
+    :param remove_small_cycles: if True cycles where start and end are
+        identical after binning will be removed
     :return: classified data as array
     """
     minimum = np.nanmin(array)
@@ -27,10 +29,20 @@ def binning(bin_count, array):
                 'maximum': maximum}),
         0)
 
+    if remove_small_cycles:
+        diff_of_cols = classified_data[:, 0] - classified_data[:, 1]
+        classified_data = classified_data[np.nonzero(diff_of_cols)]
+
     return classified_data
 
 
-def binning_as_matrix(bin_count, array, minimum=None, maximum=None, axis=[]):
+def binning_as_matrix(
+        bin_count,
+        array,
+        minimum=None,
+        maximum=None,
+        axis=[],
+        remove_small_cycles=True):
     """
     :param bin_count:
     :param array:
@@ -43,6 +55,8 @@ def binning_as_matrix(bin_count, array, minimum=None, maximum=None, axis=[]):
             * 'left'
             * 'right'
             * 'top'
+    :param remove_small_cycles: if True cycles where start and end are
+        identical after binning will be removed
     :return: data matrix with start in rows and target in columns
     """
 
@@ -63,6 +77,10 @@ def binning_as_matrix(bin_count, array, minimum=None, maximum=None, axis=[]):
     intervall_edges = classified_data[1]
 
     axis_value = np.diff(intervall_edges) / 2.0 + intervall_edges[0:-1]
+
+    if remove_small_cycles:
+        indexes = np.diag_indices(bin_count)
+        res_matrix[indexes] = 0.0
 
     if axis:
         res_matrix = append_axis(res_matrix, horizontal_axis=axis_value,
