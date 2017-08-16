@@ -134,7 +134,9 @@ class Binning(object):
         res_pairs = binning(
             bin_count,
             array,
-            remove_small_cycles=remove_small_cycles)
+            remove_small_cycles=remove_small_cycles,
+            minimum=minimum,
+            maximum=maximum)
         res_counted = count_pairs(res_pairs)
 
         return res_pairs, res_counted

@@ -4,7 +4,7 @@ import numpy as np
 from inqbus.rainflow.helpers import append_axis
 
 
-def binning(bin_count, array, remove_small_cycles=True):
+def binning(bin_count, array, remove_small_cycles=True, minimum=None, maximum=None):
     """
     classifies array
     :param bin_count: Number of bins
@@ -13,8 +13,16 @@ def binning(bin_count, array, remove_small_cycles=True):
         identical after binning will be removed
     :return: classified data as array
     """
-    minimum = np.nanmin(array)
-    maximum = np.nanmax(array)
+    if minimum is None:
+        minimum = np.nanmin(array)
+    if maximum is None:
+        maximum = np.nanmax(array)
+
+    minimum = float(minimum)
+    maximum = float(maximum)
+
+    print('minimum, maximum')
+    print(minimum,maximum)
 
     ex = 'value * (0.0 - (bin_count - 1.0)) / (minimum - maximum) +' + \
          '(-1.0 * minimum * (0.0 - (bin_count - 1.0)) / (minimum - maximum))'
@@ -62,10 +70,16 @@ def binning_as_matrix(
 
     # Bilding a 2d-histogram
 
-    if not minimum:
+    if minimum is None:
         minimum = np.nanmin(array)
-    if not maximum:
+    if maximum is None:
         maximum = np.nanmax(array)
+
+    minimum = float(minimum)
+    maximum = float(maximum)
+
+    print('minimum, maximum')
+    print(minimum, maximum)
 
     start = array[:, 0]
     target = array[:, 1]
