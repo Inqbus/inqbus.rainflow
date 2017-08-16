@@ -21,21 +21,16 @@ def binning(bin_count, array, remove_small_cycles=True, minimum=None, maximum=No
     minimum = float(minimum)
     maximum = float(maximum)
 
-    print('minimum, maximum')
-    print(minimum,maximum)
+    bin_width = ((maximum - minimum) / bin_count )
 
-    ex = 'value * (0.0 - (bin_count - 1.0)) / (minimum - maximum) +' + \
-         '(-1.0 * minimum * (0.0 - (bin_count - 1.0)) / (minimum - maximum))'
+    bin_borders = []
+    bin = minimum
 
-    classified_data = np.round(
-        ne.evaluate(
-            ex,
-            local_dict={
-                'value': array,
-                'bin_count': float(bin_count),
-                'minimum': minimum,
-                'maximum': maximum}),
-        0)
+    for x in range(0,bin_count):
+        bin_borders.append(bin)
+        bin = bin + bin_width
+
+    classified_data = np.digitize(array, bin_borders) + minimum -1
 
     if remove_small_cycles:
         diff_of_cols = classified_data[:, 0] - classified_data[:, 1]
@@ -77,9 +72,6 @@ def binning_as_matrix(
 
     minimum = float(minimum)
     maximum = float(maximum)
-
-    print('minimum, maximum')
-    print(minimum, maximum)
 
     start = array[:, 0]
     target = array[:, 1]
