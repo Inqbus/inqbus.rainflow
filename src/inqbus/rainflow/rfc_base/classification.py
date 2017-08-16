@@ -7,6 +7,10 @@ from inqbus.rainflow.helpers import append_axis
 def binning(bin_count, array, remove_small_cycles=True, minimum=None, maximum=None):
     """
     classifies array
+    :param maximum: maximum value to be recognized. Values bigger than max
+        will be put in highest class. So filter before
+    :param minimum: minimum value to be recognized. Values smaller than min
+        will added to smallest class. So filter before
     :param bin_count: Number of bins
     :param array: data to be classified
     :param remove_small_cycles: if True cycles where start and end are
