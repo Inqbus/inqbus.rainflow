@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+0.8 - BugFixes
+--------------
+
+* BugFixes to reduce differences between table and matrix of counted pairs
+
 0.7 - Remove small cycles option
 --------------------------------
 
