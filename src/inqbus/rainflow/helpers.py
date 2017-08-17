@@ -12,11 +12,12 @@ def filter_outliers(data, minimum=None, maximum=None):
 
 def filter_outliers_on_pairs(data, minimum=None, maximum=None):
     if minimum is not None:
-        data = data[:, data[0] >= minimum]
-        data = data[:, data[1] >= minimum]
+        data = data[data[:, 1] >= minimum, :]
+        data = data[data[:, 0] >= minimum, :]
+
     if maximum is not None:
-        data = data[:, data[0] <= maximum]
-        data = data[:, data[1] <= maximum]
+        data = data[data[:, 1] <= maximum, :]
+        data = data[data[:, 0] <= maximum, :]
     return data
 
 
@@ -28,9 +29,10 @@ def get_extrema(data):
 
     # first and last value is always a local extrema
     signchange[0] = 1
+
     # last value is missing because the diff-array is 1 value shorter than the
     # input array so we have to add it again
-    np.append(signchange, [1])
+    signchange = np.append(signchange, np.array([1]))
 
     calc_data = data[np.where(signchange != 0)]
 

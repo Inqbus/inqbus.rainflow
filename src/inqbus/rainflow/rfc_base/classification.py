@@ -4,7 +4,12 @@ import numpy as np
 from inqbus.rainflow.helpers import append_axis
 
 
-def binning(bin_count, array, remove_small_cycles=True, minimum=None, maximum=None):
+def binning(
+        bin_count,
+        array,
+        remove_small_cycles=True,
+        minimum=None,
+        maximum=None):
     """
     classifies array
     :param maximum: maximum value to be recognized. Values bigger than max
@@ -25,16 +30,16 @@ def binning(bin_count, array, remove_small_cycles=True, minimum=None, maximum=No
     minimum = float(minimum)
     maximum = float(maximum)
 
-    bin_width = ((maximum - minimum) / bin_count )
+    bin_width = ((maximum - minimum) / bin_count)
 
     bin_borders = []
     bin = minimum
 
-    for x in range(0,bin_count):
+    for x in range(0, bin_count):
         bin_borders.append(bin)
         bin = bin + bin_width
 
-    classified_data = np.digitize(array, bin_borders) + minimum -1
+    classified_data = np.digitize(array, bin_borders) + minimum - 1
 
     if remove_small_cycles:
         diff_of_cols = classified_data[:, 0] - classified_data[:, 1]

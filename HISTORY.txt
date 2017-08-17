@@ -1,6 +1,12 @@
 HISTORY
 =======
 
+0.9 - BugFixes and Tests
+------------------------
+
+* BugFixes on counting pairs
+* Tests for core functions
+
 0.8 - BugFixes
 --------------
 
