@@ -46,7 +46,10 @@ def binning(
 
 
     # fit values to classes 0 .. bin_count
-    classified_data = np.digitize(array, bin_borders) - 1.0
+    if count_from_zero:
+        classified_data = np.digitize(array, bin_borders) - 1.0
+    else:
+        classified_data = np.digitize(array, bin_borders)
 
     if remove_small_cycles:
         diff_of_cols = classified_data[:, 0] - classified_data[:, 1]
