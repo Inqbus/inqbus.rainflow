@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+1.2
+---
+
+* api parameter to decide between counting from 1 or from 0 for binning the data
+
 1.1 - BugFixes
 --------------
 

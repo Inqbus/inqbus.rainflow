@@ -18,7 +18,8 @@ class Rainflow(object):
             maximum=None,
             minimum=None,
             bin_count=64,
-            classify=False):
+            classify=False,
+            count_from_zero=False):
         """
         :param classify: True if classification should be done
         :param data: input data, 1d-numpy-array
@@ -27,6 +28,8 @@ class Rainflow(object):
         :param minimum: minimum value to be recognized. Values smaller than min
         will be filtered
         :param bin_count: integer for classification. Describes number of classes
+        :param count_from_zero: set True when classes should be counted from 0, else
+        they start on 1, used for classification
         :return: array with pairs, array with counted pairs
 
         2d-array pairs with data like (start, target)
@@ -36,7 +39,7 @@ class Rainflow(object):
             data = filter_outliers(data, minimum=minimum, maximum=maximum)
 
         if classify:
-            data = binning(bin_count, data)
+            data = binning(bin_count, data, count_from_zero=count_from_zero)
 
         local_extrema = get_extrema(data)
 
@@ -110,7 +113,8 @@ class Binning(object):
             bin_count=64,
             maximum=None,
             minimum=None,
-            remove_small_cycles=True):
+            remove_small_cycles=True,
+            count_from_zero=False):
         """
         Use this to add a classification after running the rainflow algorithm
 
@@ -123,6 +127,8 @@ class Binning(object):
         will be filtered
         :param minimum: minimum value to be recognized. Values smaller than min
         will be filtered
+        :param count_from_zero: set TRue when classes should be counted from 0, else
+        they start on 1
         :return:result array with pairs, counted result array
         """
         if minimum or maximum:
@@ -138,7 +144,8 @@ class Binning(object):
             array,
             remove_small_cycles=remove_small_cycles,
             minimum=minimum,
-            maximum=maximum)
+            maximum=maximum,
+            count_from_zero=count_from_zero)
         res_counted = count_pairs(res_pairs)
 
         return res_pairs, res_counted

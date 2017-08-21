@@ -15,15 +15,16 @@ class TestClassification(unittest.TestCase):
                 [4.6, 8.2],
             ])
 
-        res = c.binning(5, pairs)
-        res2 = c.binning(5, pairs, remove_small_cycles=False)
+        res = c.binning(5, pairs, count_from_zero=True)
+        res2 = c.binning(5, pairs, remove_small_cycles=False, count_from_zero=True)
         res3 = c.binning(
             5,
             pairs,
             minimum=1,
             maximum=5,
-            remove_small_cycles=False)
-        res4 = c.binning(5, pairs, minimum=1, maximum=5)
+            remove_small_cycles=False,
+            count_from_zero=True)
+        res4 = c.binning(5, pairs, minimum=1, maximum=5, count_from_zero=True)
 
         self.assertTrue(np.array_equal([[2., 0.],
                                         [4., 1.],

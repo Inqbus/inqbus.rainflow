@@ -9,9 +9,12 @@ def binning(
         array,
         remove_small_cycles=True,
         minimum=None,
-        maximum=None):
+        maximum=None,
+        count_from_zero=False):
     """
     classifies array
+    :param count_from_zero: set TRue when classes should be counted from 0, else
+        they start on 1
     :param maximum: maximum value to be recognized. Values bigger than max
         will be put in highest class. So filter before
     :param minimum: minimum value to be recognized. Values smaller than min
