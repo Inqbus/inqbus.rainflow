@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+1.5
+---
+
+* Corrected datatypes
+
 1.4
 ---
 
