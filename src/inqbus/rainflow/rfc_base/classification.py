@@ -34,12 +34,18 @@ def binning(
 
     bin_borders = []
     bin = minimum
+    classes = range(0, bin_count)
 
-    for x in range(0, bin_count):
+    for x in classes:
         bin_borders.append(bin)
         bin = bin + bin_width
 
-    classified_data = np.digitize(array, bin_borders) + minimum - 1
+    print('huhu')
+    print(bin_borders)
+
+
+    # fit values to classes 1 .. bin_count
+    classified_data = np.digitize(array, bin_borders)
 
     if remove_small_cycles:
         diff_of_cols = classified_data[:, 0] - classified_data[:, 1]
