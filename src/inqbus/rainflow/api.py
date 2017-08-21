@@ -58,7 +58,8 @@ class Rainflow(object):
                      maximum=None,
                      minimum=None,
                      bin_count=64,
-                     classify=False):
+                     classify=False,
+                     count_from_zero=False):
         """
         :param classify: True if classification should be done
         :param pairs_table_name: Table name for storing Pairs
@@ -70,6 +71,8 @@ class Rainflow(object):
         will be filtered
         :param minimum: minimum value to be recognized. Values smaller than min
         will be filtered
+        :param count_from_zero: set True when classes should be counted from 0, else
+        they start on 1, used for classification
         :param bin_count: integer for classification. Describes number of classes
         :return:
         """
@@ -84,7 +87,8 @@ class Rainflow(object):
             minimum=minimum,
             maximum=maximum,
             bin_count=bin_count,
-            classify=classify
+            classify=classify,
+            count_from_zero=count_from_zero
         )
 
         table_path_pairs = '/'.join([target_group, pairs_table_name])
@@ -198,7 +202,8 @@ class Binning(object):
             pairs_table_name='RF_Pairs_64',
             maximum=None,
             minimum=None,
-            remove_small_cycles=True):
+            remove_small_cycles=True,
+            count_from_zero=False):
         """
         Use this to add a classification after running the rainflow algorithm
 
@@ -213,6 +218,8 @@ class Binning(object):
         will be filtered
         :param minimum: minimum value to be recognized. Values smaller than min
         will be filtered
+        :param count_from_zero: set TRue when classes should be counted from 0, else
+        they start on 1
         :param counted_table_name: Table name for storing Counted Pairs
 
         """
@@ -228,7 +235,8 @@ class Binning(object):
             bin_count=bin_count,
             minimum=minimum,
             maximum=maximum,
-            remove_small_cycles=remove_small_cycles
+            remove_small_cycles=remove_small_cycles,
+            count_from_zero=count_from_zero
         )
 
         table_path_pairs = '/'.join([target_group, pairs_table_name])
