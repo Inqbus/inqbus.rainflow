@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.9'
+version = '1.1'
 
 setup(name='inqbus.rainflow',
       version=version,

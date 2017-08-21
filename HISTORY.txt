@@ -1,6 +1,11 @@
 HISTORY
 =======
 
+1.1 - BugFixes
+--------------
+
+* Corrected classes when calculating binning as table because RFC classes always start counting on 0 .. max_bin, no negative classes anymore
+
 0.9 - BugFixes and Tests
 ------------------------
 

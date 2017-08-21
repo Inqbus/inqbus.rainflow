@@ -40,12 +40,10 @@ def binning(
         bin_borders.append(bin)
         bin = bin + bin_width
 
-    print('huhu')
-    print(bin_borders)
 
 
-    # fit values to classes 1 .. bin_count
-    classified_data = np.digitize(array, bin_borders)
+    # fit values to classes 0 .. bin_count
+    classified_data = np.digitize(array, bin_borders) - 1.0
 
     if remove_small_cycles:
         diff_of_cols = classified_data[:, 0] - classified_data[:, 1]
