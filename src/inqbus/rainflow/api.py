@@ -136,8 +136,7 @@ class Binning(object):
         :return:result array with pairs, counted result array
         """
         if minimum or maximum:
-            print(array)
-
+            
             array = filter_outliers_on_pairs(
                 array,
                 minimum=minimum,
